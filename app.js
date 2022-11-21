@@ -12,7 +12,7 @@ app.get("/about",function(req,res){
 });
 
 // redirect
-app.get("./aboutus",(req,res)=>{
+app.get("./aboutUs",(req,res)=>{
     res.redirect("./about.html",{root:__dirname});
 })
 

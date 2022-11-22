@@ -5,65 +5,52 @@ app.use(express.json());
 let users = [{
     id:"1",
     name:"Sahil",
-    age:"20"
+    age:"19"
 },
 {
     id:"2",
     name:"Rahul",
-    age:"30"
+    age:"19"
 },
 {
     id:"3",
     name:"Sam",
-    age:"24"
-},
+    age:"19"
+}
 ];
 
+const userRouter = express.Router();
+app.use("/user",userRouter);
+
+userRouter
+    .route("/")
+    .get(getUser)
+    .post(postUser)
+    .patch(updateUser)
+    .delete(deleteUser)
+
+userRouter
+    .route("/:name")
+    .get(getUserById)    
+// app.get("/users",)
+
+
+
+// app.post("/user",);
+
+// app.patch("/user",)
+
+// app.delete("/user",)
+
 // with query
-app.get("/users",(req,res)=>{
-    console.log(req.query);
-    // res.send(req.query);
-    let {name,age} = req.query;
-    let dataFiltered = users.filter(UserObj=> {
-        return(UserObj.name == name && UserObj.age == age);
-    });
-    res.send(dataFiltered);
-})
-
-
 app.get("/users",(req,res)=>{
     res.send(users);
 })
 
-app.post("/user",(req,res)=>{
-    console.log(req.body.Name);
-    users = req.body;
-    res.json({
-        message:"Data received",
-        user : req.body
-    })
-});
-
-app.patch("/user",(req,res)=>{
-    console.log(req.body);
-    let dataToBeUpdated = req.body;
-    for(key in dataToBeUpdated){
-        users[key] = dataToBeUpdated[key];
-    }
-    res.json({
-        message:"Data updated Succesfully"
-    })
-})
-
-app.delete("/user",(req,res)=>{
-    users={};
-    res.json({
-        msg:"Data has been deleted!"
-    })
-})
-
 // Params ***************
-app.get("/users/:id",(req,res)=>{
+// app.get("/users/:id",)
+
+function getUserById(req,res){
     console.log(req.params.name);
     // // for db
     // let {id} = req.params;
@@ -72,8 +59,43 @@ app.get("/users/:id",(req,res)=>{
         msg:"User id:" ,
         "obj" :req.params
     });
-})
+}
 
+function getUser(req,res){
+    console.log(req.query);
+    // res.send(req.query);
+    let {name,age} = req.query;
+    // let dataFiltered = users.filter(UserObj=> {
+    //     return(UserObj.name == name && UserObj.age == age);
+    // });
+    res.send(users);
+}
 
+function postUser(req,res){
+    console.log(req.body.Name);
+    users.push(req.body);
+    res.json({
+        message:"Data received",
+        user : req.body
+    })
+}
+
+function updateUser(req,res){
+    console.log(req.body);
+    let dataToBeUpdated = req.body;
+    for(key in dataToBeUpdated){
+        users[key] = dataToBeUpdated[key];
+    }
+    res.json({
+        message:"Data updated Succesfully"
+    })
+}
+
+function deleteUser(req,res){
+    users={};
+    res.json({
+        msg:"Data has been deleted!"
+    })
+}
 
 app.listen(5000);
